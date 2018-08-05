@@ -1,0 +1,22 @@
+{
+  "name": "travelistov2-api",
+  "version": "1.0.0",
+  "description": "RESTful API for TravelistoV2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chidiemeh184/TravelistoV2-API.git"
+  },
+  "author": "Chidi Emeh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Chidiemeh184/TravelistoV2-API/issues"
+  },
+  "homepage": "https://github.com/Chidiemeh184/TravelistoV2-API#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
