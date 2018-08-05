@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Chidiemeh184/TravelistoV2-API#readme",
   "dependencies": {
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "firebase-admin": "^5.13.1"
   }
 }
