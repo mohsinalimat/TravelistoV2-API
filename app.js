@@ -6,10 +6,32 @@
 //  Copyright © 2018 Chidi Emeh. All rights reserved.
 //
 
-// Require express and create an instance of it
-var express = require('express');
-var app = express();
-const config = require('./config.json');
+'use strict';
+
+//Local Paths
+global.rootRequire = function(path){
+    return require(__dirname + '/' + path);
+}
+
+//const utils = rootRequire()
+
+// Core components
+const express = require('express');
+const app = express();
+const config = require('./Config/config.json');
+var routes = require('./Routes/routes.js')
+const morgan = require('morgan')
+
+// Express configuration
+const validator = require('express-validator');
+app.use(morgan('short'));
+// app.use(app.router);
+// routes.initialize(app);
+
+// Body Parser
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //Firebase
 var admin = require('firebase-admin');
@@ -20,7 +42,7 @@ require('firebase/auth');
 require('firebase/database');
 
 firebase.initializeApp({
-    serviceAccount: "./service-account.json",
+    serviceAccount: "./Config/service-account.json",
     databaseURL: config.databaseURL
 });
 
@@ -31,11 +53,12 @@ ref.once('value')
         console.log('Snapvalue : ', snap.val());
     });
 
-ref.child('users/').set({
-    username: "user1",
-    email: "user1@gmail.com",
-    age: "27"
-});
+
+// ref.child('users/').set({
+//     username: "user1",
+//     email: "user1@gmail.com",
+//     age: "27"
+// });
 
 
 // on the request to root (localhost:3000/)
@@ -44,6 +67,8 @@ app.get('/v1/travelisto/home', function (req, res) {
     data["Hello"] = "World"
     res.send(data);
 });
+
+// app.use('/api', routes);
 
 // start the server in the port 3000 !
 app.listen(3000, function () {
