@@ -19,9 +19,10 @@ global.rootRequire = function(path){
 const express = require('express');
 const app = express();
 const config = require('./Config/config.json');
-var routes = require('./Routes/routes.js')
-const morgan = require('morgan')
-const pixabayController = require('./Routes/COntrollers/pixabayController.js')
+var routes = require('./Routes/routes.js');
+const morgan = require('morgan');
+const pixabayController = require('./Routes/Controllers/pixabayController.js');
+const wikiDecrptnCtrl = require('./Routes/Controllers/wikiDescriptionController.js');
 
 // Express configuration
 const validator = require('express-validator');
@@ -52,15 +53,27 @@ var ref = firebase.database().ref()
 ref.once('value')
     .then(function(snap){
         console.log('Snapvalue : ', snap.val());
-    });
+});
 
- var imagePromise =  pixabayController.getImages("Empire State Building", 3)
+//  var imagePromise =  pixabayController.getImages("Empire State Building", 3);
+//  imagePromise.then((images) => {
+//     console.log(images)
+//  }, (error) => {
+//     console.log(error)
+//  })
 
- imagePromise.then((images) => {
-    console.log(images)
+var wikiPromise = wikiDecrptnCtrl.getWikiDescription("Rome")
+wikiPromise.then((wiki) => {
+    console.log(wiki)
  }, (error) => {
     console.log(error)
  })
+
+
+
+
+
+
 
 
 // ref.child('users/').set({
@@ -69,13 +82,12 @@ ref.once('value')
 //     age: "27"
 // });
 
-
 // on the request to root (localhost:3000/)
-app.get('/v1/travelisto/home', function (req, res) {
-    var data = {}
-    data["Hello"] = "World"
-    res.send(data);
-});
+// app.get('/v1/travelisto/home', function (req, res) {
+//     var data = {}
+//     data["Hello"] = "World"
+//     res.send(data);
+// });
 
 // app.use('/api', routes);
 
