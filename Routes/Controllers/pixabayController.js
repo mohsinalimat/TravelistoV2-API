@@ -14,7 +14,7 @@ var request = require('request');
 //Gets a single image
 var getImages = (query, pageCount) => {
 
-    var URL = "https://pixabay.com/api/?key="+key.pixabay+"&q="+encodeURIComponent(query)+"&image_type=photo&per_page="+pageCount;
+    var URL = `https://pixabay.com/api/?key=${key.pixabay}&q=${encodeURIComponent(query)}&image_type=photo&per_page=${pageCount}`;
     var options = {
       url: URL,
       headers: {

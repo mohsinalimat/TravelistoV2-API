@@ -13,7 +13,7 @@ var request = require('request');
 
 //Gets a Wikipedia Description for a query
 var getWikiDescription = (query) => {
-    var URL = "https://en.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(query);
+    var URL = `https://en.wikipedia.org/api/rest_v1/page/summary/${+encodeURIComponent(query)}`;
     var options = {
       url: URL,
       headers: {

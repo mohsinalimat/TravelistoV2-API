@@ -23,6 +23,7 @@ var routes = require('./Routes/routes.js');
 const morgan = require('morgan');
 const pixabayController = require('./Routes/Controllers/pixabayController.js');
 const wikiDecrptnCtrl = require('./Routes/Controllers/wikiDescriptionController.js');
+const sygicController = require('./Routes/Controllers/sygicController.js');
 
 // Express configuration
 const validator = require('express-validator');
@@ -48,13 +49,15 @@ firebase.initializeApp({
     databaseURL: config.databaseURL
 });
 
-var ref = firebase.database().ref()
+//============= FIREBASE CALL
+// var ref = firebase.database().ref()
 
-ref.once('value')
-    .then(function(snap){
-        console.log('Snapvalue : ', snap.val());
-});
+// ref.once('value')
+//     .then(function(snap){
+//         console.log('Snapvalue : ', snap.val());
+//     });
 
+//============= PIXABAY CALL
 //  var imagePromise =  pixabayController.getImages("Empire State Building", 3);
 //  imagePromise.then((images) => {
 //     console.log(images)
@@ -62,12 +65,32 @@ ref.once('value')
 //     console.log(error)
 //  })
 
-var wikiPromise = wikiDecrptnCtrl.getWikiDescription("Rome")
-wikiPromise.then((wiki) => {
-    console.log(wiki)
+//============= WIKIPEDIA CALL
+// var wikiPromise = wikiDecrptnCtrl.getWikiDescription("Rome")
+// wikiPromise.then((wiki) => {
+//     console.log(wiki)
+//  }, (error) => {
+//     console.log(error)
+//  })
+
+//============= SYGIC CALL
+var placePromise = sygicController.getPlace('New York');
+placePromise.then((place) => {
+   // console.log(place)
+    console.log(place.toJSON())
+    return(place.toJSON());
  }, (error) => {
     console.log(error)
- })
+ }).then((place) => {
+    var id = place.id;
+    var placeDetailPromise = sygicController.getPlaceDetail(id)
+    .then((detail) => {
+        console.log(detail.toJSON())
+    }, (error) => {
+        console.log(error)
+    });
+
+ });
 
 
 
@@ -76,12 +99,23 @@ wikiPromise.then((wiki) => {
 
 
 
+
+
+
+
+
+
+
+
+
+//============= FIREBASE ADD CALL
 // ref.child('users/').set({
 //     username: "user1",
 //     email: "user1@gmail.com",
 //     age: "27"
 // });
 
+//============= LOCAL CALL
 // on the request to root (localhost:3000/)
 // app.get('/v1/travelisto/home', function (req, res) {
 //     var data = {}
