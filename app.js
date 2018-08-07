@@ -21,6 +21,7 @@ const app = express();
 const config = require('./Config/config.json');
 var routes = require('./Routes/routes.js')
 const morgan = require('morgan')
+const pixabayController = require('./Routes/COntrollers/pixabayController.js')
 
 // Express configuration
 const validator = require('express-validator');
@@ -52,6 +53,14 @@ ref.once('value')
     .then(function(snap){
         console.log('Snapvalue : ', snap.val());
     });
+
+ var imagePromise =  pixabayController.getImages("Empire State Building", 3)
+
+ imagePromise.then((images) => {
+    console.log(images)
+ }, (error) => {
+    console.log(error)
+ })
 
 
 // ref.child('users/').set({
