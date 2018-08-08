@@ -24,6 +24,7 @@ const morgan = require('morgan');
 const pixabayController = require('./Routes/Controllers/pixabayController.js');
 const wikiDecrptnCtrl = require('./Routes/Controllers/wikiDescriptionController.js');
 const sygicController = require('./Routes/Controllers/sygicController.js');
+const travelistoPlaceController = require('./Routes/Controllers/travelistoPlaceController.js');
 
 // Express configuration
 const validator = require('express-validator');
@@ -49,6 +50,20 @@ firebase.initializeApp({
     databaseURL: config.databaseURL
 });
 
+
+//============= TRAVELISTO PLACE
+ var travelistoPlace =  travelistoPlaceController.getTravelistoExplore("France");
+ travelistoPlace.then((place) => {
+    console.log(place)
+
+
+ }, (error) => {
+    console.log(error)
+ })
+
+
+
+
 //============= FIREBASE CALL
 // var ref = firebase.database().ref()
 
@@ -73,40 +88,50 @@ firebase.initializeApp({
 //     console.log(error)
 //  })
 
-//============= SYGIC CALL
-var placePromise = sygicController.getPlace('New York');
-placePromise.then((place) => {
-   // console.log(place)
-    console.log(place.toJSON())
-    return(place.toJSON());
- }, (error) => {
-    console.log(error)
- }).then((place) => {
-    var id = place.id;
-    var placeDetailPromise = sygicController.getPlaceDetail(id)
-    .then((detail) => {
-        console.log(detail.toJSON())
-    }, (error) => {
-        console.log(error)
-    });
+// //============= SYGIC CALL
+// var placePromise = sygicController.getPlace('Rome');
+// placePromise.then((place) => {
+//    // console.log(place)
+//     //console.log(place.toJSON())
+//     return(place.toJSON());
+//  }, (error) => {
+//     console.log(error)
+//  }).then((place) => {
+//     var placeDetailPromise = sygicController.getPlaceDetail(place.id)
+//     .then((detail) => {
+//        //console.log("============ Place ============")
+//        console.log(detail)
+//     }, (error) => {
+//     console.log(error)
+//     });
 
- });
+//     var placeOfInterestPromise = sygicController.getPlaces(place, "poi")
+//     .then((places) => {
+//        // console.log("============ Places of Interest ============")
+//         console.log(places)
+//     }, (error) => {
+//     console.log(error)
+//     });
 
+//     var placeOfInterestPromise = sygicController.getPlaces(place, "eating")
+//     .then((places) => {
+//         //console.log("============ Restuarants ============")
+//         console.log(places)
 
+//         // var imagesPromises = pixabayController.getImages("Empire State Building", 3);
 
+//         // var imagePromise =  pixabayController.getImages("Empire State Building", 3);
+//         // imagePromise.then((images) => {
+//         //     console.log(images)
+//         // }, (error) => {
+//         //     console.log(error)
+//         // })
 
+//     }, (error) => {
+//     console.log(error)
+//     });
 
-
-
-
-
-
-
-
-
-
-
-
+//  });
 
 //============= FIREBASE ADD CALL
 // ref.child('users/').set({

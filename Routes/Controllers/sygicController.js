@@ -12,6 +12,8 @@ const SygicPlace = require('../../DB/Models/sygicPlace.js')
 const SygicPlaceDetail = require('../../DB/Models/sygicPlaceDetail.js')
 var request = require('request');
 
+//Helper Methods
+
 // Default URL Options
 var defaultOptions = (url) => {
     return {
@@ -62,8 +64,57 @@ var getPlaceDetail = (query) => {
 };
 
 
+//Get places
+var getPlaces = (place, type) => {
+
+    var URL = ''
+
+    if (type === "poi"){
+        parameter = "levels=poi";
+    }else{
+        parameter = "category=eating|restuarants";
+    }
+
+    if (place.bounding_box !== null) {
+        const bounding_box = place.bounding_box
+        const south = bounding_box.south
+        const west = bounding_box.west
+        const north = bounding_box.north
+        const east = bounding_box.east
+        URL = `https://api.sygictravelapi.com/1.0/en/places/list?bounds=${south},${west},${north},${east}&${parameter}&limit=10`
+    } else {
+        if (type === "poi"){   
+            URL = `https://api.sygictravelapi.com/1.0/en/places/list?${place.id}&${parameter}&limit=10`
+        }else{
+            URL = `https://api.sygictravelapi.com/1.0/en/places/list?${place.id}&${parameter}&limit=10`
+        }
+    }
+
+    var options = defaultOptions(URL);
+
+    return new Promise((resolve, reject) => {
+        request(options, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                var result = JSON.parse(body);
+                var places = result.data.places;
+                var placesDetailsPromises = places.map((place) => {
+                    return getPlaceDetail(place.id)
+                });
+
+                Promise.all(placesDetailsPromises).then((data) => {
+                     resolve(data)
+                }).catch((error) => {
+                    reject(error);
+                });
+            }else{
+                reject(error)
+            }
+        });
+    });
+};
 
 module.exports = {
     getPlace,
-    getPlaceDetail
+    getPlaceDetail,
+    getPlaces
 }
