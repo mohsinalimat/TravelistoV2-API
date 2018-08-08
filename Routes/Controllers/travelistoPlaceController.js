@@ -80,44 +80,51 @@ var getTravelistoExplore = (query) => {
             var place = travelistoPlace.detail
             //Add Place to data array
             data["place"] = travelistoPlace
-            var placeOfInterestPromise = sygicController.getPlaces(place, "poi")
+            // var placeOfInterestPromise = sygicController.getPlaces(place, "eating")
+            // .then((result) => {
+            //     var placesOfInterestArray = []
+            //     var trackerCount = 0
+            //     var poiPromises = result.map((placeOfinterest) => {
+            //         return new Promise((resolve, reject) => {
+            //             var innerdata = {}
+            //             innerdata["detail"] = placeOfinterest
+            //             const numberOfImages = 7
+            //             var imagePromise =  pixabayController.getImages(`${placeOfinterest.name} ${placeOfinterest.name_suffix}`, numberOfImages);
+            //             imagePromise.then((images) => {
+            //                 //Add images to data array
+            //                 innerdata["images"] = images
+            //                 //Add wiki from place object
+            //                 innerdata["wikipedia"] = placeOfinterest.description.text
+            //                 return innerdata
+            //             }, (error) => {
+            //                 reject(error)
+            //             }).then((data) => {
+            //                 resolve(data)
+            //             })
+            //         })
+            //     })
+
+            //     Promise.all(poiPromises).then((result) => {
+            //         data["placesOfInterest"] = result
+            //         console.log(data)
+            //     })
+
+
+            // }, (error) => {
+            // console.log(error)
+            // }).catch(err => {
+            //     reject(err);
+            // });
+
+
+            var restuarantsPromise = sygicController.getRestuarants(place)
             .then((result) => {
-                var placesOfInterestArray = []
-                var trackerCount = 0
-                var poiPromises = result.map((placeOfinterest) => {
-                    return new Promise((resolve, reject) => {
-                        var innerdata = {}
-                        innerdata["detail"] = placeOfinterest
-                        const numberOfImages = 7
-                        var imagePromise =  pixabayController.getImages(`${placeOfinterest.name} ${placeOfinterest.name_suffix}`, numberOfImages);
-                        imagePromise.then((images) => {
-                            //Add images to data array
-                            innerdata["images"] = images
-                            //Add wiki from place object
-                            innerdata["wikipedia"] = placeOfinterest.description.text
-                            placesOfInterestArray.push(innerdata)
-                            trackerCount++
-                            if(trackerCount == result.length){
-                                data["placesOfInterest"] = placesOfInterestArray
-                                resolve(data)
-                                console.log(data)
-                            }
-                        }, (error) => {
-                            reject(error)
-                        })
-                    });
-                })
-
-                Promise.all(poiPromises).then((result) => {
-                    console.log(result)
-                })
-
-
+                console.log(result)
             }, (error) => {
-            console.log(error)
-            }).catch(err => {
+                console.log(error)
+            }).catch((err => {
                 reject(err);
-            });
+            }))
 
         }, (error) => {
 
