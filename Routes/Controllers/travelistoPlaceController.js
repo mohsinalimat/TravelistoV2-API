@@ -31,6 +31,39 @@ var request = require('request');
 //                      }
 //
 
+//HELPER FUNCTION
+var combinePlacesAndImagesAndWikiFor = (places) => {
+    var data = {}
+    var poiPromises = places.map((placeOfinterest) => {
+        return new Promise((resolve, reject) => {
+            var innerdata = {}
+            innerdata["detail"] = placeOfinterest
+            const numberOfImages = 7
+            var imagePromise =  pixabayController.getImages(`${placeOfinterest.name} ${placeOfinterest.name_suffix}`, numberOfImages);
+            imagePromise.then((images) => {
+                //Add images to data array
+                innerdata["images"] = images
+                //Add wiki from place object
+                innerdata["wikipedia"] = placeOfinterest.description.text
+                return innerdata
+            }, (error) => {
+                reject(error)
+            }).then((data) => {
+                resolve(data)
+            })
+        });
+    });
+
+    Promise.all(poiPromises).then((result) => {
+        data["placesOfInterest"] = result
+        console.log(data)
+        return data;
+    }).catch(err => {
+        return err;
+    });
+
+}
+
 var getTravelistoPlace = (query) => {
     return new Promise((resolve, reject) => {
         var data = {}
@@ -80,51 +113,46 @@ var getTravelistoExplore = (query) => {
             var place = travelistoPlace.detail
             //Add Place to data array
             data["place"] = travelistoPlace
-            // var placeOfInterestPromise = sygicController.getPlaces(place, "eating")
-            // .then((result) => {
-            //     var placesOfInterestArray = []
-            //     var trackerCount = 0
-            //     var poiPromises = result.map((placeOfinterest) => {
-            //         return new Promise((resolve, reject) => {
-            //             var innerdata = {}
-            //             innerdata["detail"] = placeOfinterest
-            //             const numberOfImages = 7
-            //             var imagePromise =  pixabayController.getImages(`${placeOfinterest.name} ${placeOfinterest.name_suffix}`, numberOfImages);
-            //             imagePromise.then((images) => {
-            //                 //Add images to data array
-            //                 innerdata["images"] = images
-            //                 //Add wiki from place object
-            //                 innerdata["wikipedia"] = placeOfinterest.description.text
-            //                 return innerdata
-            //             }, (error) => {
-            //                 reject(error)
-            //             }).then((data) => {
-            //                 resolve(data)
-            //             })
-            //         })
-            //     })
-
-            //     Promise.all(poiPromises).then((result) => {
-            //         data["placesOfInterest"] = result
-            //         console.log(data)
-            //     })
-
-
-            // }, (error) => {
-            // console.log(error)
-            // }).catch(err => {
-            //     reject(err);
-            // });
+            
+            var placeOfInterestPromise = sygicController.getPlaces(place, "poi")
+            .then((result) => {
+                var poiCombinedData = combinePlacesAndImagesAndWikiFor(result)
+                console.log(poiCombinedData)
+                // poiCombinedData.then((data) => {
+                //     console.log(data)
+                // }, (error) => {
+                //     console.log(error)
+                // });
+            }, (error) => {
+            console.log(error)
+            }).catch(err => {
+                reject(err);
+            });
 
 
             var restuarantsPromise = sygicController.getRestuarants(place)
             .then((result) => {
                 console.log(result)
+                var poiCombinedData = combinePlacesAndImagesAndWikiFor(result)
+                console.log(poiCombinedData)
+                // poiCombinedData.then((data) => {
+                //     console.log(data)
+                // }, (error) => {
+                //     console.log(error)
+                // });
             }, (error) => {
                 console.log(error)
             }).catch((err => {
                 reject(err);
             }))
+
+
+
+            Promise.all(placeOfInterestPromise, restuarantsPromise).then((result) => {
+                console.log(result)
+            }).catch(err => {
+                reject(err);
+            });
 
         }, (error) => {
 
